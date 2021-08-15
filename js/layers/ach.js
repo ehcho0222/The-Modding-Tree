@@ -14,22 +14,47 @@ addLayer("ach", {
     type: "none", // normal: cost to gain currency depends on amount gained. static: cost depends on how much you already have
     row: "side", // Row the layer is in on the tree (0 is the first row)
     tabFormat: {
-        "Achievements": {
+        "1-84": {
             content: [
                 ["display-text",
                     function() { 
-                        return '<h2>Achievements: '+player.ach.points+'/84 Completed</h2>' 
+                        return '<h2>Achievements: '+player.ach.points+'/98 Completed</h2>' 
                     },
                     { 
                         "color": "#dfdfdf"
                     }],
                 "blank",
-                "achievements",
+                ["row", [["achievement", 11], ["achievement", 12], ["achievement", 13], ["achievement", 14], ["achievement", 15], ["achievement", 16], ["achievement", 17]]],
+                ["row", [["achievement", 21], ["achievement", 22], ["achievement", 23], ["achievement", 24], ["achievement", 25], ["achievement", 26], ["achievement", 27]]],
+                ["row", [["achievement", 31], ["achievement", 32], ["achievement", 33], ["achievement", 34], ["achievement", 35], ["achievement", 36], ["achievement", 37]]],
+                ["row", [["achievement", 41], ["achievement", 42], ["achievement", 43], ["achievement", 44], ["achievement", 45], ["achievement", 46], ["achievement", 47]]],
+                ["row", [["achievement", 51], ["achievement", 52], ["achievement", 53], ["achievement", 54], ["achievement", 55], ["achievement", 56], ["achievement", 57]]],
+                ["row", [["achievement", 61], ["achievement", 62], ["achievement", 63], ["achievement", 64], ["achievement", 65], ["achievement", 66], ["achievement", 67]]],
+                ["row", [["achievement", 71], ["achievement", 72], ["achievement", 73], ["achievement", 74], ["achievement", 75], ["achievement", 76], ["achievement", 77]]],
+                ["row", [["achievement", 81], ["achievement", 82], ["achievement", 83], ["achievement", 84], ["achievement", 85], ["achievement", 86], ["achievement", 87]]],
+                ["row", [["achievement", 91], ["achievement", 92], ["achievement", 93], ["achievement", 94], ["achievement", 95], ["achievement", 96], ["achievement", 97]]],
+                ["row", [["achievement", 101], ["achievement", 102], ["achievement", 103], ["achievement", 104], ["achievement", 105], ["achievement", 106], ["achievement", 107]]],
+                ["row", [["achievement", 111], ["achievement", 112], ["achievement", 113], ["achievement", 114], ["achievement", 115], ["achievement", 116], ["achievement", 117]]],
+                ["row", [["achievement", 121], ["achievement", 122], ["achievement", 123], ["achievement", 124], ["achievement", 125], ["achievement", 126], ["achievement", 127]]],
+            ],
+        },
+        "85-98": {
+            content: [
+                ["display-text",
+                    function() { 
+                        return '<h2>Achievements: '+player.ach.points+'/98 Completed</h2>' 
+                    },
+                    { 
+                        "color": "#dfdfdf"
+                    }],
+                "blank",
+                ["row", [["achievement", 131], ["achievement", 132], ["achievement", 133], ["achievement", 134], ["achievement", 135], ["achievement", 136], ["achievement", 137]]],
+                ["row", [["achievement", 141], ["achievement", 142], ["achievement", 143], ["achievement", 144], ["achievement", 145], ["achievement", 146], ["achievement", 147]]],
             ],
         },
     },
     tooltip() {
-        return "Achievements<br>("+player.ach.points+"/84)"
+        return "Achievements<br>("+player.ach.points+"/98)"
     },
     achievements: {
         11: {
@@ -445,7 +470,7 @@ addLayer("ach", {
         67: {
             name: "Googolaire",
             done() {
-                return player.money.points.gte(new Decimal("1e100"))
+                return player.money.points.gte(1e100)
             },
             tooltip: "Reach 1e100 Money.",
             onComplete() {
@@ -555,7 +580,7 @@ addLayer("ach", {
         84: {
             name: "Gargoogol­aire",
             done() {
-                return player.money.points.gte(new Decimal("1e200"))
+                return player.money.points.gte(1e200)
             },
             tooltip: "Reach 1e200 Money.",
             onComplete() {
@@ -615,7 +640,7 @@ addLayer("ach", {
         93: {
             name: "Googologi­cally Popular",
             done() {
-                return player.points.gte(new Decimal("1e100"))
+                return player.points.gte(1e100)
             },
             tooltip: "Reach 1e100 Popularity.",
             onComplete() {
@@ -665,7 +690,7 @@ addLayer("ach", {
         101: {
             name: "Infinity-naire",
             done() {
-                return player.money.points.gte(new Decimal("1.79e308"))
+                return player.money.points.gte("1.79e308")
             },
             tooltip: "Reach 1.79e308 Money.",
             onComplete() {
@@ -835,7 +860,7 @@ addLayer("ach", {
         124: {
             name: "Infinitely Popular",
             done() {
-                return player.points.gte(new Decimal("1.79e308"))
+                return player.points.gte("1.79e308")
             },
             tooltip: "Reach 1.79e308 Popularity.",
             onComplete() {
@@ -863,11 +888,151 @@ addLayer("ach", {
             },
         },
         127: {
-            name: "Worldwide Fan Club",
+            name: "Infinity^4-naire",
             done() {
-                return player.f.points.gte(7.88e9)
+                return player.money.points.gte("1e1233")
             },
-            tooltip: "Reach 7.88e9 Fans.",
+            tooltip: "Reach 1e1233 Money.",
+            onComplete() {
+                player.ach.points = player.ach.points.add(1)
+            },
+        },
+        131: {
+            name: "The 4th Layer",
+            done() {
+                return player.i.resets.gte(1)
+            },
+            tooltip: "Reset for Investors.",
+            onComplete() {
+                player.ach.points = player.ach.points.add(1)
+            },
+        },
+        132: {
+            name: "Age of Automation II",
+            done() {
+                return player.i.resets.gte(4)
+            },
+            tooltip: "Reset for Investors 4 times.",
+            onComplete() {
+                player.ach.points = player.ach.points.add(1)
+            },
+        },
+        133: {
+            name: "Wise Investment",
+            done() {
+                return hasUpgrade('i', 11)
+            },
+            tooltip: "Buy 1 Investor Upgrade.",
+            onComplete() {
+                player.ach.points = player.ach.points.add(1)
+            },
+        },
+        134: {
+            name: "Trinity of Investments",
+            done() {
+                return hasUpgrade('i', 21) && hasUpgrade('i', 22)
+            },
+            tooltip: "Buy 3 Investor Upgrades.",
+            onComplete() {
+                player.ach.points = player.ach.points.add(1)
+            },
+        },
+        135: {
+            name: "Challenged",
+            done() {
+                return hasChallenge('i', 11)
+            },
+            tooltip: "Complete an Investor Challenge.",
+            onComplete() {
+                player.ach.points = player.ach.points.add(1)
+            },
+        },
+        136: {
+            name: "Transfinitely Popular",
+            done() {
+                return player.money.points.gte("1e1000")
+            },
+            tooltip: "Reach 1e1000 Popularity.",
+            onComplete() {
+                player.ach.points = player.ach.points.add(1)
+            },
+        },
+        137: {
+            name: "Over The Challenge",
+            done() {
+                return hasUpgrade('i', 41) || hasUpgrade('i', 42)
+            },
+            tooltip: "Buy any 4 Investor Upgrades.",
+            onComplete() {
+                player.ach.points = player.ach.points.add(1)
+            },
+        },
+        141: {
+            name: "Easy",
+            done() {
+                return hasChallenge('i', 12)
+            },
+            tooltip: "Complete 2 Investor Challenges.",
+            onComplete() {
+                player.ach.points = player.ach.points.add(1)
+            },
+        },
+        142: {
+            name: "Number of Days with GFRIEND",
+            done() {
+                return player.money.points.gte("1e2319")
+            },
+            tooltip: "Reach 1e2319 Money.",
+            onComplete() {
+                player.ach.points = player.ach.points.add(1)
+            },
+        },
+        143: {
+            name: "Over The Challenge II",
+            done() {
+                return hasUpgrade('i', 61) || hasUpgrade('i', 62)
+            },
+            tooltip: "Buy any 6 Investor Upgrades.",
+            onComplete() {
+                player.ach.points = player.ach.points.add(1)
+            },
+        },
+        144: {
+            name: "Simple",
+            done() {
+                return hasChallenge('i', 21)
+            },
+            tooltip: "Complete 3 Investor Challenges.",
+            onComplete() {
+                player.ach.points = player.ach.points.add(1)
+            },
+        },
+        145: {
+            name: "Age of Inflation",
+            done() {
+                return hasUpgrade('i', 91) && hasUpgrade('i', 92) && hasUpgrade('i', 93)
+            },
+            tooltip: "Buy all row 9 Investor Upgrades.",
+            onComplete() {
+                player.ach.points = player.ach.points.add(1)
+            },
+        },
+        146: {
+            name: "Nice",
+            done() {
+                return player.money.points.gte("1e6969")
+            },
+            tooltip: "Reach 1e6969 Money.",
+            onComplete() {
+                player.ach.points = player.ach.points.add(1)
+            },
+        },
+        147: {
+            name: "Moderate",
+            done() {
+                return hasChallenge('i', 22)
+            },
+            tooltip: "Complete 4 Investor Challenges.",
             onComplete() {
                 player.ach.points = player.ach.points.add(1)
             },

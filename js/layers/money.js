@@ -13,6 +13,7 @@ addLayer("money", {
         auto: false,
         auto1: false,
         auto2: false,
+        order: new Decimal(1),
     }},
     color: "#5fad70",
     resource: "Money", // Name of prestige currency
@@ -199,7 +200,7 @@ addLayer("money", {
             },
         },
         32: {
-            title: "Attract Investors",
+            title: "Large Scale Investment",
             description: "<b>Investment</b> is stronger based on the levels of <b>Banner Ad</b> and <b>Video Ad</b> buyables.",
             cost() {
                 return new Decimal(4e10)
@@ -264,7 +265,7 @@ addLayer("money", {
             buy() {
                 if (this.canAfford)
                 {
-                    player[this.layer].points = player[this.layer].points.sub(tmp[this.layer].buyables[this.id].cost)
+                    if (!hasMilestone('i', 7)) player[this.layer].points = player[this.layer].points.sub(tmp[this.layer].buyables[this.id].cost)
                     addBuyables(this.layer, this.id, 1)
                 }
             },
@@ -274,6 +275,10 @@ addLayer("money", {
                 if (hasUpgrade('money', 25)) exp = new Decimal(1.25)
                 if (hasUpgrade('g', 21)) exp = exp.add(upgradeEffect('g', 21))
                 if (hasUpgrade('f', 44)) exp = exp.times(3)
+                if (hasUpgrade('i', 22)) exp = exp.times(3)
+                if (hasChallenge('i', 11)) exp = exp.times(2)
+                if (inChallenge('i', 11)) n = new Decimal(1)
+                if (inChallenge('i', 21)) n = new Decimal(1)
                 return n.pow(exp)
             },
             unlocked() {
@@ -300,7 +305,7 @@ addLayer("money", {
             buy() {
                 if (this.canAfford)
                 {
-                    player[this.layer].points = player[this.layer].points.sub(tmp[this.layer].buyables[this.id].cost)
+                    if (!hasMilestone('i', 7)) player[this.layer].points = player[this.layer].points.sub(tmp[this.layer].buyables[this.id].cost)
                     addBuyables(this.layer, this.id, 1)
                 }
             },
@@ -310,6 +315,9 @@ addLayer("money", {
                 if (hasUpgrade('g', 22)) base = base.add(upgradeEffect('g', 22))
                 if (hasUpgrade('g', 34)) base = base.add(0.015)
                 if (hasUpgrade('f', 55)) base = base.add(0.05)
+                if (hasUpgrade('i', 42)) base = base.add(0.085)
+                if (hasChallenge('i', 21)) base = base.add(0.2)
+                if (inChallenge('i', 21)) base = new Decimal(1)
                 return base.pow(x)
             },
             unlocked() {
@@ -336,7 +344,7 @@ addLayer("money", {
             buy() {
                 if (this.canAfford)
                 {
-                    player[this.layer].points = player[this.layer].points.sub(tmp[this.layer].buyables[this.id].cost)
+                    if (!hasMilestone('i', 7)) player[this.layer].points = player[this.layer].points.sub(tmp[this.layer].buyables[this.id].cost)
                     addBuyables(this.layer, this.id, 1)
                 }
             },
@@ -347,6 +355,8 @@ addLayer("money", {
                 if (!hasUpgrade('money', 33)) m = new Decimal(0)
                 let base = new Decimal(2)
                 if (hasUpgrade('f', 53)) base = base.add(0.5)
+                if (hasChallenge('i', 12)) base = base.add(0.5)
+                if (inChallenge('i', 12)) return new Decimal(1)
                 return new Decimal(base).pow(x.pow(0.95)).times(new Decimal(1).add(n.times(0.1))).times(m.times(0.5).add(1))
             },
             unlocked() {
@@ -368,20 +378,83 @@ addLayer("money", {
         if (hasUpgrade('g', 15)) gain = gain.times(upgradeEffect('g', 15))
         if (hasMilestone('g', 3)) gain = gain.times(player.g.salesEffect)
         if (player.f.unlocked) gain = gain.times(tmp.f.effect)
+        if (player.i.unlocked) gain = gain.times(tmp.i.effect)
+        if (hasUpgrade('i', 102)) gain = gain.times(upgradeEffect('i', 102))
         player.money.ps = gain
         player.money.points = player.money.points.add(gain.times(diff))
         if (player.money.best.lt(player.money.points)) player.money.best = player.money.points
     },
     automate(diff){
+        let bulk = 1
+        if (hasMilestone('i', 7)) bulk = 1
         if (hasMilestone('g', 2)){
-          if (hasUpgrade('money', 31) && player.money.auto2) tmp.money.buyables[13].buy()
-          if (hasUpgrade('money', 24) && player.money.auto1) tmp.money.buyables[12].buy()
-          if (hasUpgrade('money', 22) && player.money.auto) tmp.money.buyables[11].buy()
-          if (player.money.points.lt(0)) player.money.points = new Decimal(0)
+            if (hasUpgrade('money', 31) && player.money.auto2)
+            {
+                tmp.money.buyables[13].buy()
+            }
+            if (hasUpgrade('money', 24) && player.money.auto1)
+            {
+                tmp.money.buyables[12].buy()
+            }
+            if (hasUpgrade('money', 22) && player.money.auto)
+            {
+                tmp.money.buyables[11].buy()
+            }
+            if (player.money.points.lt(0)) player.money.points = new Decimal(0)
         }
     },
     doReset(resettingLayer) {
 		let keep = []
-		//if (layers[resettingLayer].id = '') layerDataReset("money", keep)
+        let upgradesKeep = []
+        keep.push("auto")
+        keep.push("auto1")
+        keep.push("auto2")
+        if (hasMilestone('i', 1))
+        {
+            if (player.i.resets.gte(1))
+            {
+                upgradesKeep.push(11)
+                upgradesKeep.push(12)
+            }
+            if (player.i.resets.gte(2))
+            {
+                upgradesKeep.push(13)
+                upgradesKeep.push(14)
+            }
+            if (player.i.resets.gte(3))
+            {
+                upgradesKeep.push(15)
+                upgradesKeep.push(21)
+            }
+            if (player.i.resets.gte(4))
+            {
+                upgradesKeep.push(22)
+                upgradesKeep.push(23)
+            }
+            if (player.i.resets.gte(5))
+            {
+                upgradesKeep.push(24)
+                upgradesKeep.push(25)
+            }
+            if (player.i.resets.gte(6))
+            {
+                upgradesKeep.push(31)
+                upgradesKeep.push(32)
+            }
+            if (player.i.resets.gte(7))
+            {
+                upgradesKeep.push(33)
+                upgradesKeep.push(34)
+            }
+            if (player.i.resets.gte(8))
+            {
+                upgradesKeep.push(35)
+            }
+        }
+		if (player[resettingLayer].order.gte(4))
+        {
+            layerDataReset('money', keep)
+            player.money.upgrades = upgradesKeep
+        }
 	},
 })

@@ -12,6 +12,7 @@ addLayer("f", {
         cd: new Decimal(0),
         maxcd: new Decimal(15),
         auto: false,
+        order: new Decimal(3),
     }},
     color: "#00abc0",
     requires: new Decimal("1e120"),
@@ -24,15 +25,8 @@ addLayer("f", {
         let text = "Reset Popularity for <b>+"
         if (hasMilestone('f', 2)) text = "Gain <b>+"
         text = text + formatWhole(tmp.f.getResetGain)
-        text = text + "</b> Fans<br>Next at "
-        if (player.points.lt(new Decimal("1e120")))
-        {
-            text = text + format(tmp.f.getNextAt)
-        }
-        else
-        {
-            text = text + "Infinity"
-        }
+        text = text + "</b> Fans<br>Requires "
+        text = text + format(tmp.f.getNextAt)
         text = text + " Popularity"
         return text
     },
@@ -43,6 +37,8 @@ addLayer("f", {
         if (hasUpgrade('f', 24)) gain = gain.times(upgradeEffect('f', 24))
         if (hasUpgrade('f', 45)) gain = gain.times(upgradeEffect('f', 45))
         if (hasUpgrade('f', 54)) gain = gain.times(upgradeEffect('f', 54))
+        if (player.i.unlocked) gain = gain.times(tmp.i.effect)
+        if (hasUpgrade('i', 61)) gain = gain.times(upgradeEffect('i', 61))
         return gain
     },
     row: 1, // Row the layer is in on the tree (0 is the first row)
@@ -50,56 +46,68 @@ addLayer("f", {
         return player.f.cd.lte(0) && player.points.gte(new Decimal("1e120"))
     },
     getNextAt() {
-        if (player.points.lt(new Decimal("1e120"))) return new Decimal("1e120")
-        return new Decimal("e998244353")
+        return new Decimal("1e120")
     },
     prestigeNotify() {
         return player.f.cd.lte(0) && player.points.gte(new Decimal("1e120"))
     },
     onPrestige(gain) {
+        //calculateMaxCD()
         player.f.cd = player.f.maxcd
     },
     branches: ['money'],
-    tabFormat: [
-        "main-display",
-        "blank",
-        "prestige-button",
-        "blank",
-        ["display-text",
-            function() { 
-                return 'You have ' + format(player.points) + ' Popularity' 
+    tabFormat: {
+        "Main": {
+            content: [
+                "main-display",
+                "blank",
+                "prestige-button",
+                "blank",
+                ["display-text",
+                    function() { 
+                        return 'You have ' + format(player.points) + ' Popularity' 
+                    },
+                    { 
+                        "color": "#dfdfdf"
+                    }],
+                ["display-text",
+                    function() { 
+                        return 'You have ' + format(player.money.points) + ' Money' 
+                    },
+                    { 
+                        "color": "#dfdfdf"
+                    }],
+                ["display-text",
+                    function() { 
+                        return 'There is a '+formatWhole(player.f.maxcd)+'-second cooldown when resetting for Fans.' 
+                    },
+                    { 
+                        "color": "#dfdfdf"
+                    }],
+                ["display-text",
+                    function() { 
+                        return 'You can reset for Fans in '+format(player.f.cd.max(0))+' seconds.' 
+                    },
+                    { 
+                        "color": "#dfdfdf"
+                    }],
+                "blank",
+                "milestones",
+            ],
+        },
+        "Upgrades": {
+            content: [
+                "main-display",
+                "blank",
+                "buyables",
+                "blank",
+                "upgrades",
+            ],
+            unlocked() {
+                return hasMilestone('f', 0)
             },
-            { 
-                "color": "#dfdfdf"
-            }],
-        ["display-text",
-            function() { 
-                return 'You have ' + format(player.money.points) + ' Money' 
-            },
-            { 
-                "color": "#dfdfdf"
-            }],
-        ["display-text",
-            function() { 
-                return 'There is a '+formatWhole(player.f.maxcd)+'-second cooldown when resetting for Fans.' 
-            },
-            { 
-                "color": "#dfdfdf"
-            }],
-        ["display-text",
-            function() { 
-                return 'You can reset for Fans in '+format(player.f.cd.max(0))+' seconds.' 
-            },
-            { 
-                "color": "#dfdfdf"
-            }],
-        "blank",
-        "milestones",
-        "blank",
-        "buyables",
-        "blank",
-        "upgrades",
-    ],
+        },
+    },
     effect() {
         let mult = new Decimal(1)
         let power = new Decimal(1.5)
@@ -108,13 +116,15 @@ addLayer("f", {
         if (hasUpgrade('f', 32)) power = power.times(2)
         if (hasUpgrade('f', 42)) power = power.times(1.5)
         if (hasUpgrade('f', 52)) power = power.times(1.5)
+        if (hasUpgrade('i', 81)) power = power.times(2)
+        if (hasUpgrade('i', 91)) power = power.times(1.5)
         let x = player.f.points.add(1).pow(power).times(mult)
         if (hasMilestone('f', 3)) x = player.f.best.add(1).pow(power).times(mult)
         return x
     },
     effectDescription() {
         let text = ""
-        text = text + "boosting Popularity and Money gain by <h2 style='color:"
+        text = text + "multiplying Popularity and Money gain by <h2 style='color:"
         text = text + this.color
         text = text + "; text-shadow:"
         text = text + this.color
@@ -172,6 +182,7 @@ addLayer("f", {
                 return new Decimal(10)
             },
             effect() {
+                if (player.f.best.lte(0)) return new Decimal(1)
                 return player.f.best
             },
             effectDisplay() {
@@ -188,6 +199,7 @@ addLayer("f", {
                 return new Decimal(10)
             },
             effect() {
+                if (player.f.best.lte(0)) return new Decimal(1)
                 return player.f.best.pow(new Decimal(1).div(3))
             },
             effectDisplay() {
@@ -224,6 +236,7 @@ addLayer("f", {
                 return new Decimal(15)
             },
             effect() {
+                if (player.f.best.lte(0)) return new Decimal(1)
                 return player.f.best.pow(new Decimal(1).div(4))
             },
             effectDisplay() {
@@ -235,7 +248,7 @@ addLayer("f", {
         },
         21: {
             title: "Attract More Fans",
-            description: "Fans cooldown is halved.",
+            description: "Fans cooldown is reduced to 7 seconds.",
             cost() {
                 return new Decimal(15)
             },
@@ -245,7 +258,7 @@ addLayer("f", {
         },
         22: {
             title: "Official Fan Club Status",
-            description: "Fans cooldown is reduced by 60%.",
+            description: "Fans cooldown is reduced to 3 seconds.",
             cost() {
                 return new Decimal(25)
             },
@@ -307,7 +320,7 @@ addLayer("f", {
         },
         31: {
             title: "Attract More Fans II",
-            description: "Fans cooldown is reduced by a third.",
+            description: "Fans cooldown is reduced to 2 seconds.",
             cost() {
                 return new Decimal(1000)
             },
@@ -360,7 +373,7 @@ addLayer("f", {
         },
         41: {
             title: "Attract More Fans III",
-            description: "Fans cooldown is halved.",
+            description: "Fans cooldown is reduced to 1 second.",
             cost() {
                 return new Decimal(6000)
             },
@@ -420,7 +433,7 @@ addLayer("f", {
         },
         51: {
             title: "Attract More Fans V",
-            description: "Fans cooldown is halved.",
+            description: "Fans cooldown is reduced to half a second.",
             cost() {
                 return new Decimal(1e7)
             },
@@ -477,12 +490,12 @@ addLayer("f", {
         11: {
             title: "Planet-spanning Fanbase",
             cost(x) {
-                let n = new Decimal(5e7).times(new Decimal(2).pow(x.pow(1.025)))
-                if (x.gte(25)) n = n.pow(x.sub(4).times(0.05))
-                if (x.gte(50)) n = n.pow(x.sub(-1).times(0.02))
-                if (x.gte(100)) n = n.pow(x.sub(-1).times(0.01))
-                if (x.gte(200)) n = n.pow(x.sub(99).times(0.01))
-                if (x.gte(300)) n = n.pow(x.sub(199).times(0.01))
+                let n = new Decimal(33554432).times(new Decimal(2).pow(x.pow(1.025)))
+                if (x.gte(10)) n = n.pow(x.sub(4).times(0.2))
+                if (x.gte(20)) n = n.pow(x.sub(9).times(0.1))
+                if (x.gte(30)) n = n.pow(x.sub(19).times(0.1))
+                if (x.gte(40)) n = n.pow(x.sub(24).times(0.1))
+                if (x.gte(50)) n = n.pow(x.sub(29).times(0.1))
                 return n
             },
             display() {
@@ -507,20 +520,37 @@ addLayer("f", {
             },
         },
     },
+    hotkeys: [
+        {
+            key: 'f',
+            description: 'F: Reset for Fans',
+            unlocked: true,
+            onPress() {
+			    if (canReset(this.layer))
+                {
+                    doReset(this.layer)
+                }
+		    },
+        },
+    ],
     layerShown(){
-        return player.money.best.gte(new Decimal("1.79e308"))
+        return player.money.best.gte(new Decimal("1.79e308")) || player.i.unlocked
     },
     resetsNothing() {
-        return hasMilestone('f', 2) && player.f.auto
+        return hasMilestone('f', 2)
     },
     calculateMaxCD() {
         let time = new Decimal(15)
-        if (hasUpgrade('f', 21)) time = time.times(0.5)
-        if (hasUpgrade('f', 22)) time = time.times(0.4)
-        if (hasUpgrade('f', 31)) time = time.times(2).div(3)
-        if (hasUpgrade('f', 41)) time = time.times(0.5)
-        if (hasUpgrade('f', 51)) time = time.times(0.5)
+        if (hasUpgrade('f', 21)) time = new Decimal(7)
+        if (hasUpgrade('f', 22)) time = new Decimal(3)
+        if (hasUpgrade('f', 31)) time = new Decimal(2)
+        if (hasUpgrade('f', 41) || hasUpgrade('i', 41)) time = new Decimal(1)
+        if (hasUpgrade('f', 51)) time = new Decimal(0.5)
         player.f.maxcd = time
+    },
+    automate(diff) {
+        if (hasUpgrade('i', 93)) tmp.f.buyables[11].buy()
+        if (player.f.points.lt(0)) player.f.points = new Decimal(0)
     },
     update(diff) {
         if (player.f.cd.gt(0)) player.f.cd = player.f.cd.sub(diff)
@@ -531,6 +561,56 @@ addLayer("f", {
     },
     doReset(resettingLayer) {
 		let keep = []
-		//if (layers[resettingLayer].id = '') layerDataReset("money", keep)
+        keep.push("auto")
+        let upgradesKeep = []
+        if (hasMilestone('i', 8))
+        {
+            if (player.i.resets.gte(5))
+            {
+                upgradesKeep.push(11)
+                upgradesKeep.push(12)
+                upgradesKeep.push(13)
+                upgradesKeep.push(14)
+                upgradesKeep.push(15)
+            }
+            if (player.i.resets.gte(10))
+            {
+                upgradesKeep.push(21)
+                upgradesKeep.push(22)
+                upgradesKeep.push(23)
+                upgradesKeep.push(24)
+                upgradesKeep.push(25)
+            }
+            if (player.i.resets.gte(15))
+            {
+                upgradesKeep.push(31)
+                upgradesKeep.push(32)
+                upgradesKeep.push(33)
+                upgradesKeep.push(34)
+                upgradesKeep.push(35)
+            }
+            if (player.i.resets.gte(20))
+            {
+                upgradesKeep.push(41)
+                upgradesKeep.push(42)
+                upgradesKeep.push(43)
+                upgradesKeep.push(44)
+                upgradesKeep.push(45)
+            }
+            if (player.i.resets.gte(25))
+            {
+                upgradesKeep.push(51)
+                upgradesKeep.push(52)
+                upgradesKeep.push(53)
+                upgradesKeep.push(54)
+                upgradesKeep.push(55)
+            }
+        }
+        if (hasMilestone('i', 6) && player[resettingLayer].order.eq(4)) keep.push("milestones")
+		if (player[resettingLayer].order.gte(4))
+        {
+            layerDataReset('f', keep)
+            player.f.upgrades = upgradesKeep
+        }
 	},
 })

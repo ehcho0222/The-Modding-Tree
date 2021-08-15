@@ -12,6 +12,10 @@ addLayer("g", {
         subs: new Decimal(0),
         sales: new Decimal(0),
         salesEffect: new Decimal(1),
+        auto: false,
+        auto1: false,
+        auto2: false,
+        order: new Decimal(2),
     }},
     color: "#f1f0ec",
     requires: new Decimal(1e30),
@@ -154,7 +158,7 @@ addLayer("g", {
     },
     effectDescription() {
         let text = ""
-        text = text + "boosting Popularity and Money gain by <h2 style='color:"
+        text = text + "multiplying Popularity and Money gain by <h2 style='color:"
         text = text + this.color
         text = text + "; text-shadow:"
         text = text + this.color
@@ -217,12 +221,15 @@ addLayer("g", {
                 if (hasUpgrade('g', 24)) base = base.times(upgradeEffect('g', 24))
                 if (hasUpgrade('f', 13)) base = base.times(upgradeEffect('f', 13))
                 if (hasUpgrade('f', 23)) base = base.times(upgradeEffect('f', 23))
+                if (hasMilestone('i', 0)) base = base.times(6)
+                if (hasUpgrade('i', 11)) base = base.times(upgradeEffect('i', 11))
                 if (base.gt(1e6))
                 {
                     let j = base.div(1e6)
                     j = j.pow(0.5)
                     base = new Decimal(1e6).times(j)
                 }
+                if (inChallenge('i', 22)) base = new Decimal(0)
                 return base
             },
             effectDisplay() {
@@ -247,12 +254,14 @@ addLayer("g", {
             effect() {
                 let i = upgradeEffect('g', 11).times(0.005)
                 if (hasMilestone('g', 1)) i = i.times(10)
+                if (hasUpgrade('i', 21)) i = i.times(upgradeEffect('i', 21))
                 if (i.gt(1000))
                 {
                     let j = i.div(1000)
                     j = j.pow(0.5)
                     i = j.times(1000)
                 }
+                if (inChallenge('i', 22)) i = new Decimal(0)
                 return i
             },
             effectDisplay() {
@@ -574,6 +583,7 @@ addLayer("g", {
             },
             effect(x) {
                 let n = new Decimal(2).pow(x.div(2)).times(10)
+                if (hasMilestone('i', 2)) n = n.times(3)
                 if (hasUpgrade('f', 15)) n = n.times(upgradeEffect('f', 15))
                 if (hasUpgrade('f', 33)) n = n.times(upgradeEffect('f', 33))
                 return n
@@ -611,8 +621,21 @@ addLayer("g", {
             },
         },
     },
+    hotkeys: [
+        {
+            key: 'g',
+            description: 'G: Reset for GFRIEND Songs',
+            unlocked: true,
+            onPress() {
+			    if (canReset(this.layer))
+                {
+                    doReset(this.layer)
+                }
+		    },
+        },
+    ],
     layerShown(){
-        return hasUpgrade('money', 35)
+        return hasUpgrade('money', 35) || player.i.unlocked
     },
     onPrestige() {
         player.money.points = player.money.points.sub(tmp.g.nextAt)
@@ -623,6 +646,16 @@ addLayer("g", {
     resetsNothing() {
         return true
     },
+    autoPrestige() {
+        return hasMilestone('i', 3) && player.g.auto
+    },
+    automate(diff){
+        if (hasMilestone('i', 5)){
+            if (hasMilestone('g', 4) && player.g.auto2) tmp.g.buyables[12].buy()
+            if (hasMilestone('g', 3) && player.g.auto1) tmp.g.buyables[11].buy()
+            if (player.money.points.lt(0)) player.money.points = new Decimal(0)
+        }
+    },
     update(diff) {
         if (hasUpgrade('g', 11)) player.g.views = player.g.views.add(upgradeEffect('g', 11).times(diff))
         if (hasUpgrade('g', 12)) player.g.subs = player.g.subs.add(upgradeEffect('g', 12).times(diff))
@@ -630,6 +663,45 @@ addLayer("g", {
     },
     doReset(resettingLayer) {
 		let keep = []
-		//if (layers[resettingLayer].id = '') layerDataReset("money", keep)
+        let milestonesKeep = []
+        let upgradesKeep = []
+        keep.push("auto")
+        keep.push("auto1")
+        keep.push("auto2")
+        if (hasMilestone('i', 1))
+        {
+            milestonesKeep.push(2)
+        }
+        if (hasUpgrade('i', 82)) keep.push("milestones")
+        if (hasChallenge('i', 11))
+        {
+            upgradesKeep.push(11)
+            upgradesKeep.push(12)
+            upgradesKeep.push(13)
+            upgradesKeep.push(14)
+            upgradesKeep.push(15)
+        }
+        if (hasChallenge('i', 12))
+        {
+            upgradesKeep.push(21)
+            upgradesKeep.push(22)
+            upgradesKeep.push(23)
+            upgradesKeep.push(24)
+            upgradesKeep.push(25)
+        }
+        if (hasChallenge('i', 21))
+        {
+            upgradesKeep.push(31)
+            upgradesKeep.push(32)
+            upgradesKeep.push(33)
+            upgradesKeep.push(34)
+            upgradesKeep.push(35)
+        }
+		if (player[resettingLayer].order.gte(4))
+        {
+            layerDataReset('g', keep)
+            if (!hasUpgrade('i', 82)) player.g.milestones = milestonesKeep
+            player.g.upgrades = upgradesKeep
+        }
 	},
 })

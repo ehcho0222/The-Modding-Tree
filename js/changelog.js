@@ -1,4 +1,7 @@
 var changelog = `<h1>Changelog:</h1><br><br>
+	<h2>v0.3x - Indev Era</h2><br><br>
+	<h3>v0.30 - Investors Update</h3> (08/15/21 +85)<br>
+		- Added Investors, a new layer that unlocks at 1e1233 Money.<br><br>
 	<h2>v0.2x - Classic Era</h2><br><br>
 	<h3>v0.29 - Fans Last Hotfix</h3> (08/01/21 +71)<br>
 		- Fixed bugs and typos.<br><br>

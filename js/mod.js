@@ -3,7 +3,7 @@ let modInfo = {
 	id: "gfriendforever",
 	author: "sleepground123",
 	pointsName: "Popularity",
-	modFiles: ["tree.js", "changelog.js", "layers/ach.js", "layers/story.js", "layers/money.js", "layers/g.js", "layers/f.js"],
+	modFiles: ["tree.js", "changelog.js", "layers/ach.js", "layers/story.js", "layers/money.js", "layers/g.js", "layers/f.js", "layers/i.js"],
 
 	discordName: "",
 	discordLink: "",
@@ -51,6 +51,7 @@ function getPointGen() {
 	if (hasUpgrade('g', 35)) gain = gain.times(upgradeEffect('g', 35))
 	if (hasMilestone('g', 3)) gain = gain.times(player.g.salesEffect)
 	if (player.f.unlocked) gain = gain.times(tmp.f.effect)
+	if (player.i.unlocked) gain = gain.times(tmp.i.effect)
 	return gain
 }
 
@@ -78,12 +79,12 @@ function formatDay() {
 // Display extra things at the top of the page
 var displayThings = [
 	formatDay(),
-	"Current Endgame: 1e1180 Money",
+	"Current Endgame: 1e11800 Money",
 ]
 
 // Determines when the game "ends"
 function isEndgame() {
-	return player.money.points.gte(new Decimal("1e1180"))
+	return player.money.points.gte(new Decimal("1e11800"))
 }
 
 

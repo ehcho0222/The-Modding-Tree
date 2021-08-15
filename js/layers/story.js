@@ -91,7 +91,7 @@ addLayer("story", {
                 return text
             },
             unlocked() {
-                return hasUpgrade('money', 11)
+                return hasUpgrade('money', 11) || player.i.unlocked
             },
         },
         three: {
@@ -101,7 +101,7 @@ addLayer("story", {
                 return text
             },
             unlocked() {
-                return hasUpgrade('money', 13)
+                return hasUpgrade('money', 13) || player.i.unlocked
             },
         },
         four: {
@@ -111,7 +111,7 @@ addLayer("story", {
                 return text
             },
             unlocked() {
-                return hasUpgrade('money', 15)
+                return hasUpgrade('money', 15) || player.i.unlocked
             },
         },
         five: {
@@ -121,7 +121,7 @@ addLayer("story", {
                 return text
             },
             unlocked() {
-                return getBuyableAmount('money', 11).gt(0)
+                return getBuyableAmount('money', 11).gt(0) || player.i.unlocked
             },
         },
         six: {
@@ -131,7 +131,7 @@ addLayer("story", {
                 return text
             },
             unlocked() {
-                return hasUpgrade('money', 31)
+                return hasUpgrade('money', 31) || player.i.unlocked
             },
         },
         seven: {
@@ -141,7 +141,7 @@ addLayer("story", {
                 return text
             },
             unlocked() {
-                return hasUpgrade('money', 34)
+                return hasUpgrade('money', 34) || player.i.unlocked
             },
         },
         // Chapter 2 starts here
@@ -152,7 +152,7 @@ addLayer("story", {
                 return text
             },
             unlocked() {
-                return player.g.total.gt(0)
+                return player.g.total.gt(0) || player.i.unlocked
             },
         },
         nine: {
@@ -162,7 +162,7 @@ addLayer("story", {
                 return text
             },
             unlocked() {
-                return hasMilestone('g', 0)
+                return hasMilestone('g', 0) || player.i.unlocked
             },
         },
         ten: {
@@ -172,7 +172,7 @@ addLayer("story", {
                 return text
             },
             unlocked() {
-                return hasUpgrade('g', 11)
+                return hasUpgrade('g', 11) || player.i.unlocked
             },
         },
         eleven: {
@@ -182,7 +182,7 @@ addLayer("story", {
                 return text
             },
             unlocked() {
-                return hasUpgrade('g', 15)
+                return hasUpgrade('g', 15) || player.i.unlocked
             },
         },
         twelve: {
@@ -192,7 +192,7 @@ addLayer("story", {
                 return text
             },
             unlocked() {
-                return player.g.points.gte(6)
+                return player.g.points.gte(6) || player.i.unlocked
             },
         },
         thirteen: {
@@ -202,7 +202,7 @@ addLayer("story", {
                 return text
             },
             unlocked() {
-                return player.g.sales.gte(1)
+                return player.g.sales.gte(1) || player.i.unlocked
             },
         },
         fourteen: {
@@ -212,9 +212,10 @@ addLayer("story", {
                 return text
             },
             unlocked() {
-                return player.g.subs.gte(100000)
+                return player.g.subs.gte(100000) || player.i.unlocked
             },
         },
+        // Chapter 3 starts here
         fifteen: {
             title: "First Fan",
             body() {
@@ -222,7 +223,7 @@ addLayer("story", {
                 return text
             },
             unlocked() {
-                return player.f.points.gte(1)
+                return player.f.points.gte(1) || player.i.unlocked
             },
         },
     },
