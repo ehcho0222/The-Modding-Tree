@@ -25,7 +25,7 @@ addLayer("b", {
             display() {
                 let text = ""
                 text = text + "Click to get <b>+"
-                text = text + gain
+                text = text + player.b.gain
                 text = text + "</b> Bitcoin"
                 return text
             },
