@@ -26,7 +26,7 @@ function commaFormat(num, precision) {
 function regularFormat(num, precision) {
     if (num === null || num === undefined) return "NaN"
     if (num.mag < 0.0001) return (0).toFixed(precision)
-    if (num.mag < 0.1 && precision !==0) precision = Math.max(precision, 2)
+    if (num.mag < 0.1 && precision !==0) precision = Math.max(precision, 4)
     return num.toStringWithDecimalPlaces(precision)
 }
 
@@ -47,7 +47,7 @@ function format(decimal, precision = 2, small) {
         player.hasNaN = true;
         return "NaN"
     }
-    if (decimal.sign < 0) return "-" + format(decimal.neg(), precision, small)
+    if (decimal.sign < 0) return "-" + format(decimal.neg(), precision)
     if (decimal.mag == Number.POSITIVE_INFINITY) return "Infinity"
     if (decimal.gte("eeee1000")) {
         var slog = decimal.slog()
@@ -87,8 +87,6 @@ function formatTime(s) {
     else return formatWhole(Math.floor(s / 31536000)) + "y " + formatWhole(Math.floor(s / 86400) % 365) + "d " + formatWhole(Math.floor(s / 3600) % 24) + "h " + formatWhole(Math.floor(s / 60) % 60) + "m " + format(s % 60) + "s"
 }
 
-
-
 function toPlaces(x, precision, maxAccepted) {
     x = new Decimal(x)
     let result = x.toStringWithDecimalPlaces(precision)
@@ -96,37 +94,6 @@ function toPlaces(x, precision, maxAccepted) {
         result = new Decimal(maxAccepted - Math.pow(0.1, precision)).toStringWithDecimalPlaces(precision)
     }
     return result
-}
-
-function formatLength(decimal, precision = 2, small) {
-    small = small || modInfo.allowSmall
-    decimal = new Decimal(decimal)
-    if (isNaN(decimal.sign) || isNaN(decimal.layer) || isNaN(decimal.mag)) {
-        player.hasNaN = true;
-        return "NaN"
-    }
-    if (decimal.sign < 0) return "-" + format(decimal.neg(), precision, small)
-    if (decimal.mag == Number.POSITIVE_INFINITY) return "Infinity"
-    if (decimal.gte("eeee1000")) { // 9e15 Meters are in a light-year, which can be ignored in numbers THIS large
-        var slog = decimal.slog()
-        if (slog.gte(1e6)) return "F" + format(slog.floor())
-        else return Decimal.pow(10, slog.sub(slog.floor())).toStringWithDecimalPlaces(3) + "F" + commaFormat(slog.floor(), 0) + " uni"
-    }
-    else if (decimal.gte("9e1000026")) return exponentialFormat(decimal.div(9e26), 0, false) + " uni"
-    else if (decimal.gte("9e10026")) return exponentialFormat(decimal.div(9e26), 0) + " uni"
-    else if (decimal.gte(9e35)) return exponentialFormat(decimal.div(9e26), precision) + " uni"
-    else if (decimal.gte(9e29)) return commaFormat(decimal.div(9e26), 0) + " uni"
-    else if (decimal.gte(9e24)) return regularFormat(decimal.div(9e26), precision) + " uni"
-    else if (decimal.gte(9e18)) return commaFormat(decimal.div(9e15), 0) + " ly"
-    else if (decimal.gte(9e15)) return regularFormat(decimal.div(9e15), precision) + " ly"
-    else if (decimal.gte(1.5e14)) return commaFormat(decimal.div(1.5e11), precision) + " AU"
-    else if (decimal.gte(1.5e11)) return regularFormat(decimal.div(1.5e11), precision) + " AU"
-    else if (decimal.gte(1e9)) return regularFormat(decimal.div(1e9), precision) + " Gm"
-    else if (decimal.gte(1e6)) return regularFormat(decimal.div(1e6), precision) + " Mm"
-    else if (decimal.gte(1e3)) return regularFormat(decimal.div(1e3), precision) + " km"
-    else if (decimal.gte(1)) return regularFormat(decimal.div(1), precision) + " m"
-    else if (decimal.eq(0)) return (0).toFixed(precision) + " mm"
-    else return regularFormat(decimal.times(1e3), precision) + " mm"
 }
 
 // Will also display very small numbers
