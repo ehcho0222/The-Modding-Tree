@@ -24,8 +24,8 @@
 }
 
 .buyable {
-	height: 200px;
-	width: 200px;
+	height: 160px;
+	width: 160px;
 	border-radius: 25%;
 	border: 2px solid;
 	border-color: rgba(0, 0, 0, 0.125);
