@@ -9,12 +9,12 @@
 }
 
 .achievement {
-	height: 90px;
-	width: 90px;
+	height: 80px;
+	width: 80px;
 	border-radius: 25%;
 	border: 2px solid;
 	border-color: rgba(0, 0, 0, 0.125);
-	font-size: 10px;
+	font-size: 9px;
 	color: white;
 	text-shadow: 0 0 2px #000000;
 }
@@ -24,12 +24,12 @@
 }
 
 .buyable {
-	height: 192px;
-	width: 192px;
+	height: 160px;
+	width: 160px;
 	border-radius: 25%;
 	border: 2px solid;
 	border-color: rgba(0, 0, 0, 0.125);
-	font-size: 10px;
+	font-size: 11px;
 	position:relative;
 }
 
