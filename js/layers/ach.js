@@ -160,10 +160,66 @@ addLayer("ach", {
             },
         },
         28: {
-            name: "We Couldn't Afford 9",
-            tooltip: "Have 6 Boosters.",
+            name: "We Couldn't Afford 5",
+            tooltip: "Have 4 Boosters.",
             done() {
-                return getBuyableAmount('e', 31).gte(6)
+                return getBuyableAmount('e', 31).gte(4)
+            },
+        },
+        31: {
+            name: "Burning",
+            tooltip: "Have 1 Fuel.",
+            done() {
+                return getBuyableAmount('e', 32).gte(1)
+            },
+        },
+        32: {
+            name: "This Generator is OP",
+            tooltip: "Reach x1.00e16 Multiplier for the 1st Energy Generator.",
+            done() {
+                return player.e.genMult[0].gte(1e16)
+            },
+        },
+        33: {
+            name: "Lucky Number",
+            tooltip: "Have 7 Boosters.", // 2^224
+            done() {
+                return getBuyableAmount('e', 31).gte(7)
+            },
+        },
+        34: {
+            name: "Double Fuel",
+            tooltip: "Have 2 Fuel.", // 2^304
+            done() {
+                return getBuyableAmount('e', 32).gte(2)
+            },
+        },
+        35: {
+            name: "Triple Fuel",
+            tooltip: "Have 3 Fuel.", // 2^528
+            done() {
+                return getBuyableAmount('e', 32).gte(3)
+            },
+        },
+        36: {
+            name: "Overdrive",
+            tooltip: "Have 20 Boosters.", // 2^640
+            done() {
+                return getBuyableAmount('e', 31).gte(20)
+            },
+        },
+        37: {
+            name: "Age of Automation",
+            tooltip: "Buy all Energy Generator Autobuyers.", // 2^768
+            done() {
+                return player.ab.upgrades.length >= 8
+            },
+        },
+        38: {
+            name: "Full Tank",
+            tooltip: "Have 4 Fuel.", // 2^800
+            done() {
+                return getBuyableAmount('e', 32).gte(4)
             },
         },
     },
@@ -173,6 +229,28 @@ addLayer("ach", {
             effectDescription: "Unlock Autobuyers.",
             done() {
                 return player.ach.achievements.length >= 10
+            },
+            unlocked() {
+                return true
+            },
+        },
+        1: {
+            requirementDescription: "13 Achievements",
+            effectDescription(){
+                let text = "Achievements boost the 1st Energy Generator.<br>Currently: x"
+                text = text + format(new Decimal(player.ach.achievements.length).sub(9).times(9).pow(0.5))
+                return text
+            },
+            done() {
+                return player.ach.achievements.length >= 13
+            },
+            effect() {
+                return new Decimal(player.ach.achievements.length).sub(9).times(9).pow(0.5)
+                // 13 => 6x
+                // 18 => 9x
+                // 25 => 12x
+                // 34 => 15x
+                // 45 => 18x
             },
             unlocked() {
                 return true

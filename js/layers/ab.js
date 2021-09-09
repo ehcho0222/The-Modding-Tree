@@ -24,8 +24,8 @@ addLayer("ab", {
                     "color": "#dfdfdf"
                 }],
                 "blank",
-                ["row", [["upgrade", 11],["upgrade", 12],["upgrade", 13],["upgrade", 14]]],
-                ["row", [["upgrade", 21],["upgrade", 22],["upgrade", 23],["upgrade", 24]]],
+                ["row", [["upgrade", 11],["clickable", 11],["upgrade", 12],["clickable", 12],["upgrade", 13],["clickable", 13],["upgrade", 14],["clickable", 14]]],
+                ["row", [["upgrade", 21],["clickable", 21],["upgrade", 22],["clickable", 22],["upgrade", 23],["clickable", 23],["upgrade", 24],["clickable", 24]]],
             ],
             unlocked() {
                 return true
@@ -46,7 +46,7 @@ addLayer("ab", {
             currencyInternalName: "points",
             currencyLayer: "e",
             unlocked() {
-                return !hasUpgrade('ab', 11)
+                return !hasUpgrade(this.layer, this.id)
             },
         },
         12: {
@@ -59,7 +59,7 @@ addLayer("ab", {
             currencyInternalName: "points",
             currencyLayer: "e",
             unlocked() {
-                return !hasUpgrade('ab', 12)
+                return !hasUpgrade(this.layer, this.id)
             },
         },
         13: {
@@ -72,7 +72,7 @@ addLayer("ab", {
             currencyInternalName: "points",
             currencyLayer: "e",
             unlocked() {
-                return !hasUpgrade('ab', 13)
+                return !hasUpgrade(this.layer, this.id)
             },
         },
         14: {
@@ -85,7 +85,7 @@ addLayer("ab", {
             currencyInternalName: "points",
             currencyLayer: "e",
             unlocked() {
-                return !hasUpgrade('ab', 14)
+                return !hasUpgrade(this.layer, this.id)
             },
         },
         21: {
@@ -98,7 +98,7 @@ addLayer("ab", {
             currencyInternalName: "points",
             currencyLayer: "e",
             unlocked() {
-                return !hasUpgrade('ab', 21)
+                return !hasUpgrade(this.layer, this.id)
             },
         },
         22: {
@@ -111,7 +111,7 @@ addLayer("ab", {
             currencyInternalName: "points",
             currencyLayer: "e",
             unlocked() {
-                return !hasUpgrade('ab', 22)
+                return !hasUpgrade(this.layer, this.id)
             },
         },
         23: {
@@ -124,7 +124,7 @@ addLayer("ab", {
             currencyInternalName: "points",
             currencyLayer: "e",
             unlocked() {
-                return !hasUpgrade('ab', 23)
+                return !hasUpgrade(this.layer, this.id)
             },
         },
         24: {
@@ -137,7 +137,177 @@ addLayer("ab", {
             currencyInternalName: "points",
             currencyLayer: "e",
             unlocked() {
-                return !hasUpgrade('ab', 24)
+                return !hasUpgrade(this.layer, this.id)
+            },
+        },
+    },
+    clickables: {
+        11: {
+            display() {
+                return "1st Energy Generator Autobuyer<br>Currently: " + ((getClickableState(this.layer, this.id) == 1) ? "ON" : "OFF")
+            },
+            unlocked() {
+                return hasUpgrade(this.layer, this.id)
+            },
+            canClick() {
+                return true
+            },
+            onClick() {
+                if (getClickableState(this.layer, this.id) == 1)
+                {
+                    setClickableState(this.layer, this.id, 0)
+                }
+                else
+                {
+                    setClickableState(this.layer, this.id, 1)
+                }
+            },
+        },
+        12: {
+            display() {
+                return "2nd Energy Generator Autobuyer<br>Currently: " + (getClickableState(this.layer, this.id) == 1) ? "ON" : "OFF"
+            },
+            unlocked() {
+                return hasUpgrade(this.layer, this.id)
+            },
+            canClick() {
+                return true
+            },
+            onClick() {
+                if (getClickableState(this.layer, this.id) == 1)
+                {
+                    setClickableState(this.layer, this.id, 0)
+                }
+                else
+                {
+                    setClickableState(this.layer, this.id, 1)
+                }
+            },
+        },
+        13: {
+            display() {
+                return "3rd Energy Generator Autobuyer<br>Currently: " + (getClickableState(this.layer, this.id) == 1) ? "ON" : "OFF"
+            },
+            unlocked() {
+                return hasUpgrade(this.layer, this.id)
+            },
+            canClick() {
+                return true
+            },
+            onClick() {
+                if (getClickableState(this.layer, this.id) == 1)
+                {
+                    setClickableState(this.layer, this.id, 0)
+                }
+                else
+                {
+                    setClickableState(this.layer, this.id, 1)
+                }
+            },
+        },
+        14: {
+            display() {
+                return "4th Energy Generator Autobuyer<br>Currently: " + (getClickableState(this.layer, this.id) == 1) ? "ON" : "OFF"
+            },
+            unlocked() {
+                return hasUpgrade(this.layer, this.id)
+            },
+            canClick() {
+                return true
+            },
+            onClick() {
+                if (getClickableState(this.layer, this.id) == 1)
+                {
+                    setClickableState(this.layer, this.id, 0)
+                }
+                else
+                {
+                    setClickableState(this.layer, this.id, 1)
+                }
+            },
+        },
+        21: {
+            display() {
+                return "5th Energy Generator Autobuyer<br>Currently: " + (getClickableState(this.layer, this.id) == 1) ? "ON" : "OFF"
+            },
+            unlocked() {
+                return hasUpgrade(this.layer, this.id)
+            },
+            canClick() {
+                return true
+            },
+            onClick() {
+                if (getClickableState(this.layer, this.id) == 1)
+                {
+                    setClickableState(this.layer, this.id, 0)
+                }
+                else
+                {
+                    setClickableState(this.layer, this.id, 1)
+                }
+            },
+        },
+        22: {
+            display() {
+                return "6th Energy Generator Autobuyer<br>Currently: " + (getClickableState(this.layer, this.id) == 1) ? "ON" : "OFF"
+            },
+            unlocked() {
+                return hasUpgrade(this.layer, this.id)
+            },
+            canClick() {
+                return true
+            },
+            onClick() {
+                if (getClickableState(this.layer, this.id) == 1)
+                {
+                    setClickableState(this.layer, this.id, 0)
+                }
+                else
+                {
+                    setClickableState(this.layer, this.id, 1)
+                }
+            },
+        },
+        23: {
+            display() {
+                return "7th Energy Generator Autobuyer<br>Currently: " + (getClickableState(this.layer, this.id) == 1) ? "ON" : "OFF"
+            },
+            unlocked() {
+                return hasUpgrade(this.layer, this.id)
+            },
+            canClick() {
+                return true
+            },
+            onClick() {
+                if (getClickableState(this.layer, this.id) == 1)
+                {
+                    setClickableState(this.layer, this.id, 0)
+                }
+                else
+                {
+                    setClickableState(this.layer, this.id, 1)
+                }
+            },
+        },
+        24: {
+            display() {
+                return "8th Energy Generator Autobuyer<br>Currently: " + ((getClickableState(this.layer, this.id) == 1) ? "ON" : "OFF")
+            },
+            unlocked() {
+                return hasUpgrade(this.layer, this.id)
+            },
+            canClick() {
+                return true
+            },
+            onClick() {
+                if (getClickableState(this.layer, this.id) == 1)
+                {
+                    setClickableState(this.layer, this.id, 0)
+                }
+                else
+                {
+                    setClickableState(this.layer, this.id, 1)
+                }
             },
         },
     },

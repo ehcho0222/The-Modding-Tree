@@ -3,7 +3,7 @@ let modInfo = {
 	id: "somberWaggishRedBath6e86a1e2",
 	author: "sleepground123",
 	pointsName: "log(Energy)",
-	modFiles: ["tree.js", "changelog.js", "layers/ach.js", "layers/energy.js"],
+	modFiles: ["tree.js", "changelog.js", "layers/ach.js", "layers/ab.js", "layers/energy.js"],
 
 	discordName: "",
 	discordLink: "",
@@ -46,6 +46,7 @@ function getPointGen() {
 
 // You can add non-layer related variables that should to into "player" and be saved here, along with default values
 function addedPlayerData() { return {
+	numberMap42: [11, 12, 13, 14, 21, 22, 23, 24]
 }}
 
 // Display extra things at the top of the page
@@ -69,7 +70,7 @@ var backgroundStyle = {
 
 // You can change this if you have things that can be messed up by long tick lengths
 function maxTickLength() {
-	return(1)
+	return(1000)
 }
 
 // Use this if you need to undo inflation from an older version. If the version is older than the version that fixed the issue,

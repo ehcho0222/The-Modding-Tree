@@ -7,15 +7,21 @@ addLayer("e", {
     position: 0, // Horizontal position within a row. By default it uses the layer id and sorts in alphabetical order
     startData() { return {
         unlocked: true,
-		points: new Decimal(4),
         order: new Decimal(1),
+		points: new Decimal(4),
+        startingPoints: new Decimal(4),
         ps: new Decimal(0),
         gen: [new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0)],
         genps: [new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0)],
         genMult: [new Decimal(1), new Decimal(1), new Decimal(1), new Decimal(1), new Decimal(1), new Decimal(1), new Decimal(1), new Decimal(1)],
         genCost: [new Decimal(2).pow(2), new Decimal(2).pow(6), new Decimal(2).pow(12), new Decimal(2).pow(20), new Decimal(2).pow(30), new Decimal(2).pow(42), new Decimal(2).pow(56), new Decimal(2).pow(72)],
         genCostIncr: [new Decimal(2), new Decimal(2).pow(2), new Decimal(2).pow(3), new Decimal(2).pow(4), new Decimal(2).pow(5), new Decimal(2).pow(6), new Decimal(2).pow(7), new Decimal(2).pow(8)],
-        perGenMult: new Decimal(2).pow(1/8)
+        perGenMult: new Decimal(2).pow(1/8),
+        perBoostMult: new Decimal(2),
+        boostCost: new Decimal(2).pow(32),
+        boostCostIncr: new Decimal(2).pow(32),
+        fuelCost: new Decimal(2).pow(128),
+        fuelCostIncr: new Decimal(2).pow(128),
     }},
     color: "#ffff33",
     resource: "Energy", // Name of prestige currency
@@ -34,6 +40,7 @@ addLayer("e", {
                 }],
                 "blank",
                 ["bar", "boostBar"],
+                ["bar", "fuelBar"],
                 ["bar", "infBar"],
                 "blank",
                 "buyables",
@@ -333,29 +340,79 @@ addLayer("e", {
                 return text
             },
             effect(x) {
-                return new Decimal(2).pow(x)
+                return player.e.perBoostMult.pow(x)
             },
             canAfford() {
-                return player[this.layer].points.gte(this.cost())
+                return player[this.layer].points.gte(player.e.boostCost)
             },
             buy() {
-                player[this.layer].points = new Decimal(4)
+                player[this.layer].points = new Decimal(player.e.startingPoints)
+                player.e.boostCost = player.e.boostCost.times(player.e.boostCostIncr)
                 setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
-                for (let i = 11; i < 25; i++)
-                {
-                    if (i % 10 >= 1 && i % 10 <= 4)
-                    {
-                        player.e.buyables[i] = new Decimal(0)
-                    }
-                }
                 for (let i = 0; i < 8; i++)
                 {
+                    player.e.buyables[player.numberMap42[i]] = new Decimal(0)
                     player.e.gen[i] = new Decimal(0)
                     player.e.genps[i] = new Decimal(0)
                     player.e.genMult[i] = new Decimal(2).pow(getBuyableAmount(this.layer, this.id))
                     player.e.genCost[i] = new Decimal(2).pow((i+2)*(i+1))
                     player.e.genCostIncr[i] = new Decimal(2).pow(i+1)
                 }
+            },
+            style: {
+                "width": "256px"
+            },
+            unlocked() {
+                return true
+            }
+        },
+        32: {
+            title: "Fuel",
+            cost(x) {
+                let exp = new Decimal(128).times(x.add(1))
+                exp = exp.add(new Decimal(48).times(x.times(x.add(1))))
+                return new Decimal(2).pow(exp)
+            },
+            display() {
+                let text = ""
+                text = text + "Reset Energy, Generators and Boosters to gain Fuel.<br><h3>Amount:</h3> "
+                text = text + formatWhole(player.e.buyables[this.id])
+                text = text + "<br><br><h3>Effect:</h3> +"
+                text = text + format(buyableEffect(this.layer, this.id).boostMult)
+                text = text + " to Booster Multiplier, and x"
+                text = text + format(buyableEffect(this.layer, this.id).firstMult)
+                text = text + " to 1st Energy Generator<br><br><h3>Cost:</h3> "
+                text = text + format(this.cost())
+                return text
+            },
+            effect(x) {
+                let obj = {
+                    boostMult: x.times(0.4),
+                    firstMult: new Decimal(1000).pow(x)
+                }
+                return obj
+            },
+            canAfford() {
+                return player[this.layer].points.gte(player.e.fuelCost)
+            },
+            buy() {
+                player[this.layer].points = new Decimal(player.e.startingPoints)
+                player[this.layer].buyables[31] = new Decimal(0)
+                player.e.boostCost = new Decimal(2).pow(32)
+                player.e.fuelCost = player.e.fuelCost.times(player.e.fuelCostIncr)
+                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+                for (let i = 0; i < 8; i++)
+                {
+                    player.e.buyables[player.numberMap42[i]] = new Decimal(0)
+                    player.e.gen[i] = new Decimal(0)
+                    player.e.genps[i] = new Decimal(0)
+                    player.e.genMult[i] = new Decimal(2).pow(getBuyableAmount(this.layer, this.id))
+                    player.e.genCost[i] = new Decimal(2).pow((i+2)*(i+1))
+                    player.e.genCostIncr[i] = new Decimal(2).pow(i+1)
+                }
+            },
+            style: {
+                "width": "256px"
             },
             unlocked() {
                 return true
@@ -368,7 +425,7 @@ addLayer("e", {
             width: 400,
             height: 40,
             display() {
-                let max = new Decimal(32).times(getBuyableAmount('e', 31).add(1))
+                let max = player.e.boostCost.log(2)
                 let cur
                 if (player.e.points.lt(1))
                 {
@@ -384,7 +441,51 @@ addLayer("e", {
                 return text
             },
             progress() {
-                let max = new Decimal(32).times(getBuyableAmount('e', 31).add(1))
+                let max = player.e.boostCost.log(2)
+                let cur
+                if (player.e.points.lt(1))
+                {
+                    cur = new Decimal(0)
+                }
+                else
+                {
+                    cur = player.e.points.log(2)
+                }
+                return cur.div(max).min(1)
+            },
+            baseStyle: {
+                "background-color": "#333300"
+            },
+            fillStyle: {
+                "background-color": "#999900"
+            },
+            textStyle: {
+                "color": "#ffffff"
+            },
+            instant: true
+        },
+        fuelBar: {
+            direction: RIGHT,
+            width: 400,
+            height: 40,
+            display() {
+                let max = player.e.fuelCost.log(2)
+                let cur
+                if (player.e.points.lt(1))
+                {
+                    cur = new Decimal(0)
+                }
+                else
+                {
+                    cur = player.e.points.log(2)
+                }
+                let pct = cur.div(max).times(100).min(100)
+                let text = format(pct)
+                text = text + "% to the Next Fuel"
+                return text
+            },
+            progress() {
+                let max = player.e.fuelCost.log(2)
                 let cur
                 if (player.e.points.lt(1))
                 {
@@ -472,32 +573,63 @@ addLayer("e", {
                 }
 		    },
         },
+        {
+            key: 'f',
+            description: 'F: Reset for Fuel',
+            unlocked: true,
+            onPress() {
+			    if (tmp.e.buyables[31].canAfford)
+                {
+                    tmp.e.buyables[31].buy()
+                }
+		    },
+        },
     ],
+    calcMultiplier(i) {
+        let base = new Decimal(1)
+        base = base.times(player.e.perGenMult.pow(player.e.buyables[player.numberMap42[i]])) // Per-purchase Multiplier
+        player.e.perBoostMult = new Decimal(2).add(buyableEffect('e', 32).boostMult)
+        base = base.times(player.e.perBoostMult.pow(player.e.buyables[31])) // Booster Multiplier
+        if (i === 0)
+        {
+            base = base.times(buyableEffect('e', 32).firstMult.pow(player.e.buyables[32])) // Fuel Multiplier
+        }
+        if (i === 0 && hasMilestone('ach', 1))
+        {
+            base = base.times(new Decimal(player.ach.achievements.length).sub(9).times(9).pow(0.5)) // Achievement Multiplier
+        }
+        return base
+    },
     update(diff) {
-        let gain7 = player.e.gen[7].times(player.e.genMult[7])
-        player.e.genps[6] = gain7
-        player.e.gen[6] = player.e.gen[6].add(gain7.times(diff))
-        let gain6 = player.e.gen[6].times(player.e.genMult[6])
-        player.e.genps[5] = gain6
-        player.e.gen[5] = player.e.gen[5].add(gain6.times(diff))
-        let gain5 = player.e.gen[5].times(player.e.genMult[5])
-        player.e.genps[4] = gain5
-        player.e.gen[4] = player.e.gen[4].add(gain5.times(diff))
-        let gain4 = player.e.gen[4].times(player.e.genMult[4])
-        player.e.genps[3] = gain4
-        player.e.gen[3] = player.e.gen[3].add(gain4.times(diff))
-        let gain3 = player.e.gen[3].times(player.e.genMult[3])
-        player.e.genps[2] = gain3
-        player.e.gen[2] = player.e.gen[2].add(gain3.times(diff))
-        let gain2 = player.e.gen[2].times(player.e.genMult[2])
-        player.e.genps[1] = gain2
-        player.e.gen[1] = player.e.gen[1].add(gain2.times(diff))
-        let gain1 = player.e.gen[1].times(player.e.genMult[1])
-        player.e.genps[0] = gain1
-        player.e.gen[0] = player.e.gen[0].add(gain1.times(diff))
+        for (let i = 0; i <= 7; i++)
+        {
+            player.e.genMult[i] = layers.e.calcMultiplier(i)
+        }
+        for (let i = 6; i >= 0; i--)
+        {
+            let gain = player.e.gen[i+1].times(player.e.genMult[i+1])
+            player.e.genps[i] = gain
+            player.e.gen[i] = player.e.gen[i].add(gain.times(diff))
+        }
         let gain0 = player.e.gen[0].times(player.e.genMult[0])
         player.e.ps = gain0
         player.e.points = player.e.points.add(gain0.times(diff))
+    },
+    automate(diff) {
+        for (let i = 0; i <= 7; i++)
+        {
+            if (hasUpgrade('ab', player.numberMap42[i]) && getClickableState('ab', player.numberMap42[i]) == 1)
+            {
+                if (player[this.layer].points.gte(player.e.genCost[i]))
+                {
+                    tmp.e.buyables[player.numberMap42[i]].buy()
+                }
+            }
+        }
+        if (player.e.points.lt(0))
+        {
+            player.e.points = new Decimal(0)
+        }
     },
     layerShown() {
         return true
