@@ -40,7 +40,7 @@ function sumValues(x) {
     return x.reduce((a, b) => Decimal.add(a, b))
 }
 
-function format(decimal, precision = 2, small) {
+function format(decimal, precision = 3, small) {
     small = small || modInfo.allowSmall
     decimal = new Decimal(decimal)
     if (isNaN(decimal.sign) || isNaN(decimal.layer) || isNaN(decimal.mag)) {
@@ -71,7 +71,7 @@ function format(decimal, precision = 2, small) {
         return format(decimal, precision) + "⁻¹"
 }
 
-function formatWhole(decimal, precision = 2) {
+function formatWhole(decimal, precision = 3) {
     decimal = new Decimal(decimal)
     if (decimal.gte(1e9)) return format(decimal, precision)
     if (decimal.lt(0.995) && !decimal.eq(0)) return format(decimal, precision)

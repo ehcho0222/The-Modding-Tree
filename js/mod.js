@@ -1,9 +1,9 @@
 let modInfo = {
-	name: "The Energy Tree",
-	id: "somberWaggishRedBath6e86a1e2",
+	name: "The Counting Tree",
+	id: "angryDrunkHalfSoup1b43c14a",
 	author: "sleepground123",
-	pointsName: "log(Energy)",
-	modFiles: ["tree.js", "changelog.js", "layers/ach.js", "layers/ab.js", "layers/energy.js"],
+	pointsName: "Number",
+	modFiles: ["tree.js", "changelog.js", "layers/c.js"],
 
 	discordName: "",
 	discordLink: "",
@@ -12,8 +12,8 @@ let modInfo = {
 }
 
 let VERSION = {
-	num: "0.1.01",
-	name: "",
+	num: "0.20",
+	name: "The Beginning",
 }
 
 let winText = `Congratulations! You have reached the end and beaten this game, but for now...`
@@ -33,30 +33,22 @@ function canGenPoints(){
 
 // Calculate points/sec!
 function getPointGen() {
-	if (player.e.points.lte(1))
-	{
-		player.points = new Decimal(0)
-	}
-	else
-	{
-		player.points = player.e.points.log(10)
-	}
 	if(!canGenPoints()) return new Decimal(0)
 }
 
 // You can add non-layer related variables that should to into "player" and be saved here, along with default values
 function addedPlayerData() { return {
-	numberMap42: [11, 12, 13, 14, 21, 22, 23, 24]
+	ms: new Decimal(0)
 }}
 
 // Display extra things at the top of the page
 var displayThings = [
-	"Current Endgame: 1.79e308 Energy (308.25 logE)",
+	"Current Endgame: Count to 100",
 ]
 
 // Determines when the game "ends"
 function isEndgame() {
-	return player.e.points.gte(new Decimal("1.7977e308"))
+	return player.points.gte(new Decimal(100))
 }
 
 
@@ -70,7 +62,7 @@ var backgroundStyle = {
 
 // You can change this if you have things that can be messed up by long tick lengths
 function maxTickLength() {
-	return(1000)
+	return(500)
 }
 
 // Use this if you need to undo inflation from an older version. If the version is older than the version that fixed the issue,
