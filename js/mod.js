@@ -1,19 +1,19 @@
 let modInfo = {
-	name: "The Elements Tree",
-	id: "basicPowerfulPlacidHighway27818612",
+	name: "Save LOONA Tree",
+	id: "fuckyoublockberry",
 	author: "sleepground123",
-	pointsName: "Matter",
-	modFiles: ["tree.js", "changelog.js", "layers/00 Achievements.js", "layers/01 H.js", "layers/02 He.js", "layers/-01 Alpha.js"],
+	pointsName: "KRW",
+	modFiles: ["tree.js", "changelog.js", "layers/ach.js", "layers/main.js"],
 
 	discordName: "",
 	discordLink: "",
-	initialStartPoints: new Decimal (1), // Used for hard resets and new players
+	initialStartPoints: new Decimal (0), // Used for hard resets and new players
 	offlineLimit: 0,  // In hours
 }
 
 let VERSION = {
-	num: "0.01",
-	name: "The Beginning",
+	num: "1.0",
+	name: "#SaveLOONA",
 }
 
 let winText = `Congratulations! You have reached the end and beaten this game, but for now...`
@@ -28,35 +28,36 @@ function getStartPoints(){
 
 // Determines if it should show points/sec
 function canGenPoints(){
-	return hasUpgrade("H", 12)
+	return false
 }
 
 // Calculate points/sec!
 function getPointGen() {
 	if(!canGenPoints()) return new Decimal(0)
-	let gain = new Decimal(0.1)
-	if (hasUpgrade("H", 14)) gain = gain.times(upgradeEffect("H", 14))
-	if (hasUpgrade("H", 21)) gain = gain.times(upgradeEffect("H", 21))
-	if (hasUpgrade("H", 24)) gain = gain.times(upgradeEffect("H", 24))
-	if (hasUpgrade("H", 31)) gain = gain.times(upgradeEffect("H", 31))
-	if (hasUpgrade("He", 12)) gain = gain.times(upgradeEffect("He", 12).amount)
-	if (hasUpgrade("He", 31)) gain = gain.times(upgradeEffect("He", 31))
+	let gain = new Decimal(1)
+	if (player.points.gte(1e5)) gain = gain.div(10)
+	if (player.points.gte(1e6))
+	{
+		gain = gain.div(player.points.div(1e6).pow(player.scalingFactor))
+	}
 	return gain
 }
 
 // You can add non-layer related variables that should to into "player" and be saved here, along with default values
 function addedPlayerData() { return {
-	alpha: new Decimal(0.5),
+	deathBonus: new Decimal(1),
+	deathReq: new Decimal(1e8),
+	scalingFactor: new Decimal(7),
 }}
 
 // Display extra things at the top of the page
 var displayThings = [
-	"Current Endgame: 1.79e308 Matter",
+	"Money Needed to Save LOONA: 9,900,000,000 KRW",
 ]
 
 // Determines when the game "ends"
 function isEndgame() {
-	return player.points.gte(new Decimal("1.79e308"))
+	return player.points.gte(new Decimal("9.9e9"))
 }
 
 

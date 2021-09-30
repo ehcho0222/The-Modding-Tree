@@ -56,7 +56,7 @@ function format(decimal, precision = 3, small) {
     }
     else if (decimal.gte("1e1000000")) return exponentialFormat(decimal, 0, false)
     else if (decimal.gte("1e10000")) return exponentialFormat(decimal, 0)
-    else if (decimal.gte(1e9)) return exponentialFormat(decimal, precision)
+    else if (decimal.gte(1e300)) return exponentialFormat(decimal, precision)
     else if (decimal.gte(1e3)) return commaFormat(decimal, 0)
     else if (decimal.gte(0.0001) || !small) return regularFormat(decimal, precision)
     else if (decimal.eq(0)) return (0).toFixed(precision)
@@ -73,7 +73,7 @@ function format(decimal, precision = 3, small) {
 
 function formatWhole(decimal, precision = 3) {
     decimal = new Decimal(decimal)
-    if (decimal.gte(1e9)) return format(decimal, precision)
+    if (decimal.gte(1e300)) return format(decimal, precision)
     if (decimal.lt(0.995) && !decimal.eq(0)) return format(decimal, precision)
     return format(decimal, 0)
 }

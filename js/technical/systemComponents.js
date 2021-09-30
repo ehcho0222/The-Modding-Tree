@@ -113,8 +113,8 @@ var systemComponents = {
 		</span>
 		<br>
 		<span class="overlayThing">You have </span>
-		<h2  class="overlayThing" id="points">{{format(player.points)}}</h2>
-		<span class="overlayThing"> Matter</span>
+		<h2  class="overlayThing" id="points">{{formatWhole(player.points)}}</h2>
+		<span class="overlayThing"> KRW</span>
 		<br>
 		<span v-if="canGenPoints()"  class="overlayThing">({{tmp.other.oompsMag != 0 ? format(tmp.other.oomps) + " OOM" + (tmp.other.oompsMag < 0 ? "^OOM" : tmp.other.oompsMag > 1 ? "^" + tmp.other.oompsMag : "") + "s" : formatSmall(getPointGen())}}/sec)</span>
 		<div v-for="thing in tmp.displayThings" class="overlayThing"><span v-if="thing" v-html="thing"></span></div>
