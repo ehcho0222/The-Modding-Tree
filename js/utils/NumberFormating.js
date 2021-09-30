@@ -98,7 +98,7 @@ function toPlaces(x, precision, maxAccepted) {
 }
 
 // Will also display very small numbers
-function formatSmall(x, precision=2) { 
+function formatSmall(x, precision=3) { 
     return format(x, precision, true)    
 }
 

@@ -1,18 +1,18 @@
 let modInfo = {
-	name: "The Counting Tree",
-	id: "angryDrunkHalfSoup1b43c14a",
+	name: "The Elements Tree",
+	id: "basicPowerfulPlacidHighway27818612",
 	author: "sleepground123",
-	pointsName: "Number",
-	modFiles: ["tree.js", "changelog.js", "layers/c.js"],
+	pointsName: "Matter",
+	modFiles: ["tree.js", "changelog.js", "layers/00 Achievements.js", "layers/01 H.js", "layers/02 He.js", "layers/-01 Alpha.js"],
 
 	discordName: "",
 	discordLink: "",
-	initialStartPoints: new Decimal (0), // Used for hard resets and new players
+	initialStartPoints: new Decimal (1), // Used for hard resets and new players
 	offlineLimit: 0,  // In hours
 }
 
 let VERSION = {
-	num: "0.20",
+	num: "0.01",
 	name: "The Beginning",
 }
 
@@ -28,27 +28,35 @@ function getStartPoints(){
 
 // Determines if it should show points/sec
 function canGenPoints(){
-	return false
+	return hasUpgrade("H", 12)
 }
 
 // Calculate points/sec!
 function getPointGen() {
 	if(!canGenPoints()) return new Decimal(0)
+	let gain = new Decimal(0.1)
+	if (hasUpgrade("H", 14)) gain = gain.times(upgradeEffect("H", 14))
+	if (hasUpgrade("H", 21)) gain = gain.times(upgradeEffect("H", 21))
+	if (hasUpgrade("H", 24)) gain = gain.times(upgradeEffect("H", 24))
+	if (hasUpgrade("H", 31)) gain = gain.times(upgradeEffect("H", 31))
+	if (hasUpgrade("He", 12)) gain = gain.times(upgradeEffect("He", 12).amount)
+	if (hasUpgrade("He", 31)) gain = gain.times(upgradeEffect("He", 31))
+	return gain
 }
 
 // You can add non-layer related variables that should to into "player" and be saved here, along with default values
 function addedPlayerData() { return {
-	ms: new Decimal(0)
+	alpha: new Decimal(0.5),
 }}
 
 // Display extra things at the top of the page
 var displayThings = [
-	"Current Endgame: Count to 100",
+	"Current Endgame: 1.79e308 Matter",
 ]
 
 // Determines when the game "ends"
 function isEndgame() {
-	return player.points.gte(new Decimal(100))
+	return player.points.gte(new Decimal("1.79e308"))
 }
 
 
