@@ -2,8 +2,8 @@
 body {
 	color: var(--color);
 	overflow: hidden;
-	--background: #000000;
-	--color: #ffffff;
+	--background: #0f0f0f;
+	--color: #dfdfdf;
 	--points: #ffffff;
 	background: var(--background)
 }
