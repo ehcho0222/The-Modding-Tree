@@ -1,9 +1,8 @@
 let modInfo = {
-	name: "The Creation Tree",
+	name: "The Everything Tree",
 	id: "fuckyoucubeentertainment",
 	author: "sleepground123",
-	modFiles: ["layers.js", "tree.js"],
-
+	modFiles: ["layers/a.js", "tree.js"],
 	discordName: "",
 	discordLink: "",
 	initialStartPoints: new Decimal (10), // Used for hard resets and new players
