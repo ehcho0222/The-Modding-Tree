@@ -1,13 +1,13 @@
 let modInfo = {
-	name: "The Creation Tree",
-	id: "fuckyoucubeentertainment",
+	name: "The Data Tree",
+	id: "fucktheduckuntilexploded",
 	author: "sleepground123",
-	modFiles: ["layers.js", "tree.js"],
-
+	modFiles: ["layers/prod.js", "tree.js"],
+	pointsName: "Bytes",
 	discordName: "",
 	discordLink: "",
-	initialStartPoints: new Decimal (10), // Used for hard resets and new players
-	offlineLimit: 1,  // In hours
+	initialStartPoints: new Decimal (0), // Used for hard resets and new players
+	offlineLimit: 0,  // In hours
 }
 
 // Set your version in num and name
@@ -33,7 +33,7 @@ function getStartPoints(){
 
 // Determines if it should show points/sec
 function canGenPoints(){
-	return true
+	return false
 }
 
 // Calculate points/sec!
@@ -69,7 +69,7 @@ var backgroundStyle = {
 
 // You can change this if you have things that can be messed up by long tick lengths
 function maxTickLength() {
-	return(3600) // Default is 1 hour which is just arbitrarily large
+	return(10)
 }
 
 // Use this if you need to undo inflation from an older version. If the version is older than the version that fixed the issue,
