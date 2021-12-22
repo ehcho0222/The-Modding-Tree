@@ -8,7 +8,7 @@ addLayer("ach", {
         unlocked: true,
 		points: new Decimal(0),
     }},
-    color: "#ffc040",
+    color: "#ffcc33",
     resource: "Achievements", // Name of prestige currency
     type: "none", // normal: cost to gain currency depends on amount gained. static: cost depends on how much you already have
     row: "side", // Row the layer is in on the tree (0 is the first row)
@@ -23,46 +23,39 @@ addLayer("ach", {
     },
     achievements: {
         11: {
-            name: "You've Gotta Start Somewhere",
+            name: "First Upgrade",
             done() {
-                return hasUpgrade('energy', 11)
+                return player.radio.upgrades.length >= 1
             },
-            tooltip: "Begin the generation of Matter.",
+            tooltip: "Buy a Radio Waves upgrade."
         },
         12: {
-            name: "Another Upgrade",
+            name: "First Row",
             done() {
-                return hasUpgrade('energy', 21) || hasUpgrade('energy', 22)
+                return hasUpgrade("radio", 11) && hasUpgrade("radio", 12) && hasUpgrade("radio", 13)
             },
-            tooltip: "Have any row 2 Energy Upgrade.",
+            tooltip: "Buy all first row Radio Waves upgrades."
         },
         13: {
-            name: "The Last Row",
+            name: "Formula Break",
             done() {
-                return hasUpgrade('energy', 31) || hasUpgrade('energy', 32) || hasUpgrade('energy', 33)
+                return player.radio.maxReset.gte(2)
             },
-            tooltip: "Have any row 3 Energy Upgrade.",
+            tooltip: "Get 2 or more Radio Waves in a single reset.<br>Reward: Quadruple Radio Waves gain."
         },
         14: {
-            name: "Triple Counter",
+            name: "100 Energy is a Lot",
             done() {
-                return player.energy.maxReset.gte(3)
+                return player.points.gte(100)
             },
-            tooltip: "Gain at least 3 Energy in one reset. Reward: Gain 50% more Energy.",
+            tooltip: "Reach 100 Energy.<br>Reward: Triple Energy gain."
         },
         15: {
-            name: "50 Energy is a Lot",
+            name: "Microwave Pizza",
             done() {
-                return player.energy.points.gte(50)
+                return player.micro.points.gte(1)
             },
-            tooltip: "Reach 50 Energy. Reward: Production nerf based on Matter is 40% weaker.",
-        },
-        16: {
-            name: "Let There be Light",
-            done() {
-                return player.photon.points.gte(1)
-            },
-            tooltip: "Reset for Photons. Reward: Production nerf based on Matter is 16.7% weaker.",
+            tooltip: "Reset for Microwaves.<br>Reward: Double Radio Waves gain."
         },
     },
     updatePoints() {
